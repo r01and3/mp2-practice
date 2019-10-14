@@ -17,7 +17,7 @@ public:
 	TVector(ValueType*, int, int);
 	TVector(const TVector&);
 	~TVector();
-	ValueType length();
+	ValueType length() const;
 	TVector& operator=(const TVector&);
 	TVector operator+(ValueType);
 	TVector operator-(ValueType);
@@ -30,7 +30,6 @@ public:
 	ValueType& operator[](int);
 	int getSize() const;
 	void setSize(int);
-	void setIndex(int);
 	friend istream& operator >> (istream &_in, TVector &_vector) {
 		for (int i = 0; i < _vector.size; i++) _in >> _vector.x[i];
 		return _in;
@@ -55,7 +54,7 @@ template<class ValueType>
 TVector<ValueType>::TVector(ValueType* _x, int _size, int _index) {
 	size = _size;
 	x = new ValueType[size];
-	memcpy(x, _x, sizeof(ValueType)*size);
+	memcpy(x, _x, sizeof(ValueType)*size);///
 	index = _index;
 }
 
@@ -90,7 +89,7 @@ TVector<ValueType>& TVector<ValueType>::operator=(const TVector<ValueType> &_vec
 }
 
 template<class ValueType>
-ValueType TVector<ValueType>::length() {
+ValueType TVector<ValueType>::length() const {
 	ValueType length = 0;
 	for (int i = 0; i < size; i++)length += x[i] * x[i];
 	return sqrt(length);
@@ -98,9 +97,7 @@ ValueType TVector<ValueType>::length() {
 
 template<class ValueType>
 TVector<ValueType> TVector<ValueType>::operator+(ValueType _plus) {
-	TVector<ValueType> r;
-	r.x = new ValueType[size];
-	r.index = index;
+	TVector<ValueType> r(size, index);
 	for (int i = 0; i < size; i++) r.x[i] = x[i] + _plus;
 	return r;
 }
@@ -142,17 +139,17 @@ TVector<ValueType> TVector<ValueType>::operator-(const TVector<ValueType> &_vect
 
 template<class ValueType>
 ValueType TVector<ValueType>::operator*(const TVector<ValueType> &_vector) {
-	if ((size + index) != (_vector.size + _vector.index)) throw "Error:Unequal sizes";
+	if ((size + index) != (_vector.size + _vector.index)) throw "Error:Unequal sizes";///
 	ValueType r = 0;
 	for (int i = 0; i < _vector.size; i++) {
-		if (index <= i)r += x[i - index] * _vector.x[i];
+		r += x[i] * _vector.x[i];
 	}
 	return r;
 }
 
 template<class ValueType>
 bool TVector<ValueType>::operator==(const TVector<ValueType> &_vector) const{
-	if (size != _vector.size) return false;
+	if (size != _vector.size) return false;///
 	for (int i = 0; i < size; i++) if (x[i] != _vector.x[i]) return false;
 	return true;
 }
@@ -178,7 +175,3 @@ void TVector<ValueType>::setSize(int s) {
 	size = s;
 }
 
-template<class ValueType>
-void TVector<ValueType>::setIndex(int s) {
-	index = s;
-}

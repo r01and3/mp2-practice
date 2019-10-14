@@ -115,7 +115,6 @@ TMatrix<ValueType>& TMatrix<ValueType>::operator=(const TMatrix<ValueType> &_m) 
 	if (size != _m.size) {
 		delete[] x;
 		size = _m.size;
-		index = _m.index;
 		x = new TVector<ValueType>[size];
 	}
 	for (int i = 0; i < size; i++) {

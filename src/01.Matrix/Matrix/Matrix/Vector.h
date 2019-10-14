@@ -7,6 +7,9 @@
 using namespace std;
 
 template<class ValueType>
+class TMatrix;
+
+template<class ValueType>
 class TVector {
 protected:
 	int size;
@@ -41,6 +44,7 @@ public:
 			_out << std::setw(5) << std::setprecision(2) << std::right << _vector.x[i] << ' ';
 		return _out;
 	}
+	friend TMatrix<ValueType>;
 };
 
 template<class ValueType>
@@ -54,8 +58,8 @@ template<class ValueType>
 TVector<ValueType>::TVector(ValueType* _x, int _size, int _index) {
 	size = _size;
 	x = new ValueType[size];
-	memcpy(x, _x, sizeof(ValueType)*size);///
 	index = _index;
+	for (int i = 0; i < size; i++) x[i] = _x[i];
 }
 
 template<class ValueType>
@@ -63,7 +67,6 @@ TVector<ValueType>::TVector(const TVector &_copy) {
 	size = _copy.size;
 	x = new ValueType[size];
 	index = _copy.index;
-	//memcpy(x, _copy.x, sizeof(ValueType)*size);
 	for (int i = 0; i < size; i++) x[i] = _copy.x[i];
 }
 
@@ -104,42 +107,37 @@ TVector<ValueType> TVector<ValueType>::operator+(ValueType _plus) {
 
 template<class ValueType>
 TVector<ValueType> TVector<ValueType>::operator-(ValueType _minus) {
-	TVector<ValueType> r;
-	r.x = new ValueType[size];
+	TVector<ValueType> r(size, index);
 	for (int i = 0; i < size; i++) r.x[i] = x[i] - _minus;
 	return r;
 }
 
 template<class ValueType>
 TVector<ValueType> TVector<ValueType>::operator*(ValueType _multiplus) {
-	TVector<ValueType> r;
-	r.x = new ValueType[size];
-	r.index = index;
+	TVector<ValueType> r(size, index);
 	for (int i = 0; i < size; i++) r.x[i] = x[i] * _multiplus;
 	return r;
 }
 
 template<class ValueType>
 TVector<ValueType> TVector<ValueType>::operator+(const TVector<ValueType> &_vector) {
-	if (size != _vector.size) throw "Error:Different size vectors";
-	TVector<ValueType> r;
-	r.x = new ValueType[size];
+	if ((size != _vector.size)||(index != _vector.index)) throw "Error:Different size vectors";
+	TVector<ValueType> r(size, index);
 	for (int i = 0; i < size; i++) r.x[i] = x[i] + _vector.x[i];
 	return r;
 }
 
 template<class ValueType>
 TVector<ValueType> TVector<ValueType>::operator-(const TVector<ValueType> &_vector) {
-	if (size != _vector.size) throw "Error:Different size vectors";
-	TVector<ValueType> r;
-	r.x = new ValueType[size];
+	if ((size != _vector.size) || (index != _vector.index)) throw "Error:Different size vectors";
+	TVector<ValueType> r(size, index);
 	for (int i = 0; i < size; i++) r.x[i] = x[i] - _vector.x[i];
 	return r;
 }
 
 template<class ValueType>
 ValueType TVector<ValueType>::operator*(const TVector<ValueType> &_vector) {
-	if ((size + index) != (_vector.size + _vector.index)) throw "Error:Unequal sizes";///
+	if ((size != _vector.size) || (index != _vector.index)) throw "Error:Different size vectors";
 	ValueType r = 0;
 	for (int i = 0; i < _vector.size; i++) {
 		r += x[i] * _vector.x[i];
@@ -149,7 +147,7 @@ ValueType TVector<ValueType>::operator*(const TVector<ValueType> &_vector) {
 
 template<class ValueType>
 bool TVector<ValueType>::operator==(const TVector<ValueType> &_vector) const{
-	if (size != _vector.size) return false;///
+	if ((size != _vector.size) || (index != _vector.index)) return false;///
 	for (int i = 0; i < size; i++) if (x[i] != _vector.x[i]) return false;
 	return true;
 }

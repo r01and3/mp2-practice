@@ -103,10 +103,12 @@ TVector<ValueType> TMatrix<ValueType>::operator*(const TVector<ValueType> &_v)
 {
 	if (size != _v.getSize())
 		throw "Error:Matrice and vector have different sizes";
-	TVector<ValueType> v(size);
-	for (int i = 0; i < size; i++)
-		v[i] = x[i] * _v;
-	return v;
+	TVector<ValueType> r(size);
+	for (int i = 0; i < size; i++) {
+		r[i] = 0;
+		for (int j = 0; j < x[i].size; j++) r[i] += x[i].x[j] * _v.x[j];
+	}
+	return r;
 }
 
 template<class ValueType>

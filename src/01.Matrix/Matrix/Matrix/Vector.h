@@ -147,7 +147,7 @@ ValueType TVector<ValueType>::operator*(const TVector<ValueType> &_vector) {
 
 template<class ValueType>
 bool TVector<ValueType>::operator==(const TVector<ValueType> &_vector) const{
-	if ((size != _vector.size) || (index != _vector.index)) return false;///
+	if ((size != _vector.size) || (index != _vector.index)) return false;
 	for (int i = 0; i < size; i++) if (x[i] != _vector.x[i]) return false;
 	return true;
 }

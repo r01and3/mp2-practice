@@ -120,9 +120,6 @@ TMatrix<ValueType>& TMatrix<ValueType>::operator=(const TMatrix<ValueType> &_m) 
 		x = new TVector<ValueType>[size];
 	}
 	for (int i = 0; i < size; i++) {
-		//x[i] = TVector<ValueType>(size - i, i);
-		/*x[i].setSize(size - 1);
-		x[i].setIndex(i);*/
 		x[i] = _m.x[i];
 	}
 	return *this;

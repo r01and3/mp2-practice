@@ -1,10 +1,11 @@
 #pragma once
 #include "Stack.h"
+#include <string.h>
 
 class Converter {
 protected:
-	TStack<char> operators;
-	TStack<char> operands;
+	TStack<string> operators;
+	TStack<string> operands;
 	double* operand_values;
 	char* source_expression;
 public:

@@ -106,7 +106,7 @@ TVector<ValueType> TMatrix<ValueType>::operator*(const TVector<ValueType> &_v)
 	TVector<ValueType> r(size);
 	for (int i = 0; i < size; i++) {
 		r[i] = 0;
-		for (int j = 0; j < x[i].size; j++) r[i] += x[i].x[j] * _v.x[j];
+		for (int j = 0; j < x[i].size; j++) r[i] += x[i].x[j] * _v.x[j + x[i].index];
 	}
 	return r;
 }

@@ -56,13 +56,19 @@ void main() {
 	cout << v << endl;
 	TMatrix<double> m2(v);
 	TMatrix<double> m3(m2);
+	TMatrix<double> m4(3);
+	cin >> m4;
 	/*Function and Operation Test*/
+	cout << "matrix plus number" << endl;
 	m1 = m2 + 5;
 	cout << m1 << endl;
+	cout << "matrix minus number" << endl;
 	m1 = m2 - 5;
 	cout << m1 << endl;
+	cout << "matrix multiplus number" << endl;
 	m1 = m2 * 5;
 	cout << m1 << endl;
+	cout << "matrix plus matrix" << endl;
 	try {
 		m1 = m2 + m3;
 		cout << m1 << endl;
@@ -70,13 +76,15 @@ void main() {
 	catch (char* str) {
 		cout << str << endl;
 	}
+	cout << "matrix minus matrix" << endl;
 	try {
-		m1 = m2 - m3;
+		m1 = m2 - m4;
 		cout << m1 << endl;
 	}
 	catch (char* str) {
 		cout << str << endl;
 	}
+	cout << "matrix multiplus vector" << endl;
 	try {
 		v3 = m2 * v2;
 		cout << v3 << endl;
@@ -84,8 +92,11 @@ void main() {
 	catch (char* str) {
 		cout << str << endl;
 	}
+	cout << "m2 = m4" << endl;
+	m2 = m4;
+	cout << m2;
 	b = m2 == m3;
-	cout << b << endl;
+	cout << "m2 == m3 = " << b << endl;
 	b = m1 != m2;
-	cout << b << endl;
+	cout << "m1 != m2 = " << b << endl;
 }

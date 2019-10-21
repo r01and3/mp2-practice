@@ -32,7 +32,6 @@ public:
 	bool operator!=(const TVector&) const;
 	ValueType& operator[](int);
 	int getSize() const;
-	void setSize(int);
 	friend istream& operator >> (istream &_in, TVector &_vector) {
 		for (int i = 0; i < _vector.size; i++) _in >> _vector.x[i];
 		return _in;
@@ -168,8 +167,4 @@ int TVector<ValueType>::getSize() const{
 	return size;
 }
 
-template<class ValueType>
-void TVector<ValueType>::setSize(int s) {
-	size = s;
-}
 

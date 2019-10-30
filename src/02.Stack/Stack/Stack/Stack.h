@@ -2,18 +2,20 @@
 
 template<class ValueType>
 class TStack {
-private:
+public:
 	ValueType* elems;
 	int size;
 	int top;
 public:
-	TStack(int);
+	TStack(int size = 4);
 	TStack(const TStack&);
 	~TStack();
 	void Push(ValueType);
 	ValueType Pop();
 	bool IsEmpty() const;
 	bool IsFull() const;
+	ValueType TopElems() const;
+	TStack<ValueType>& operator=(const TStack<ValueType>&);
 };
 
 template<class ValueType>
@@ -60,4 +62,22 @@ template<class ValueType>
 ValueType TStack<ValueType>::Pop() {
 	if (this->IsEmpty()) throw "Error:Stack empty";
 	return elems[top--];
+}
+
+template<class ValueType>
+ValueType TStack<ValueType>::TopElems() const {
+	return elems[top];
+}
+
+template<class ValueType>
+TStack<ValueType>& TStack<ValueType>::operator=(const TStack<ValueType> &_stack) {
+	if (this == &_stack) return *this;
+	if (size != _stack.size) {
+		delete[] elems;
+		size = _stack.size;
+		elems = new ValueType[size];
+	}
+	top = _stack.top;
+	for (int i = 0; i < size; i++) elems[i] = _stack.elems[i];
+	return *this;
 }

@@ -19,7 +19,7 @@ void Converter::create_postfix_form() {
 				continue;
 			}
 			if (priority(se[i], operators.TopElems())) {
-				while((operators.TopElems() != ')') && !(operators.IsEmpty()))
+				while((!priority(operators.TopElems(), se[i])) && !(operators.IsEmpty()) && (operators.TopElems() != '('))
 					operands.Push(operators.Pop());
 				operators.Push(se[i]);
 				continue;
@@ -34,7 +34,6 @@ void Converter::create_postfix_form() {
 
 bool Converter::priority(char a, char b) const {
 	if ((a == '+' || a == '-') && (b == '*' || b == '/')) return true;
-	if ((a == '*' || a == '/') && (b == '*' || b == '/')) return true;
 	return false;
 }
 
@@ -44,11 +43,11 @@ void Converter::input_source_expression() {
 
 void Converter::out_postfix_form() {
 	TStack<char> copy = PostFixForm;
-	string out;
-	string aout;
-	while (copy.IsEmpty()) out.append(copy.Pop());
-	//reverse(out.begin(), out.end());
-	cout << out;
+	TStack<char> rcopy = PostFixForm;
+	while (!rcopy.IsEmpty()) rcopy.Pop();
+	while (!copy.IsEmpty()) rcopy.Push(copy.Pop());
+	while (!rcopy.IsEmpty()) cout << rcopy.Pop();
+
 }
 
 double Converter::calculator(double a, double b, char o) {
@@ -67,15 +66,21 @@ double Converter::calculator(double a, double b, char o) {
 
 double Converter::expression_count() {
 	TStack<double> s(se.length());
-	for (int i = 0; i < operandsk; i++) s.Push(operand_values[i]);
-	while (!PostFixForm.IsEmpty()) {
-		if ((PostFixForm.TopElems() == '+') || (PostFixForm.TopElems() == '-') || (PostFixForm.TopElems() == '*') || (PostFixForm.TopElems() == '/')) {
-			double a = s.Pop();
+	TStack<char> a(PostFixForm.size);
+	int i = 0;
+	while(!PostFixForm.IsEmpty()) a.Push(PostFixForm.Pop());
+	while (!a.IsEmpty()) {
+		if ((a.TopElems() == '+') || (a.TopElems() == '-') || (a.TopElems() == '*') || (a.TopElems() == '/')) {
 			double b = s.Pop();
-			s.Push(calculator(a, b, PostFixForm.Pop()));
+			double c = s.Pop();
+			s.Push(calculator(c, b, a.Pop()));
 			continue;
 		}
-		PostFixForm.Pop();
+		else {
+			s.Push(operand_values[i]);
+			i++;
+		}
+		a.Pop();
 	}
 	return s.Pop();
 }

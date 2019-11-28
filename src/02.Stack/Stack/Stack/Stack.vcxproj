@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Converter.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="ValueOperands.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Converter.cpp" />

@@ -1,21 +1,16 @@
 #pragma once
 #include "Stack.h"
 #include <string>
+#include "ValueOperands.h"
 
 using namespace std;
 
-class Converter {
+static class Converter {
+private:
+	static bool Priority(char, char);
+	static double Calculator(double, double, char);
 public:
-	TStack<char> PostFixForm;
-	double* operand_values;
-	string se;
-	int operandsk;
-public:
-	void input_source_expression();
-	void input_operand_values();
-	void create_postfix_form();
-	void out_postfix_form();
-	bool priority(char, char) const;
-	double calculator(double, double, char);
-	double expression_count();
+	static string CreatePostFixForm(const string&);
+	static double Calculate(const string&, double*, int);
+	static double* GetValueOperands(const string&, int*);
 };

@@ -2,11 +2,22 @@
 #include "Stack.h"
 #include <iostream>
 
+using namespace std;
+
 void main() {
 	Converter c;
-	c.input_source_expression();
-	c.create_postfix_form();
-	c.out_postfix_form();
-	c.input_operand_values();
-	cout << c.expression_count();
+	string s, g;
+	int f = 1;
+	int* k = &f;
+	cin >> s;
+	try {
+		string g = c.CreatePostFixForm(s);
+		cout << g << endl;
+		double *V = new double[1];
+		V = c.GetValueOperands(g, k);
+		cout << c.Calculate(g, V, *k);
+	}
+	catch (char* f) {
+		cout << f << endl;
+	}
 }

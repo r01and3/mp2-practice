@@ -1,7 +1,6 @@
 #pragma once
 #include "Stack.h"
 #include <string>
-#include "ValueOperands.h"
 
 using namespace std;
 

@@ -90,6 +90,7 @@ double Converter::Calculator(double a, double b, char o) {
 	case '*':
 		return a * b;
 	case '/':
+		if (b == 0) throw "You cannot divide by zero";
 		return a / b;
 	}
 }
@@ -117,6 +118,7 @@ double* Converter::GetValueOperands(const string &_str, int *ki) {
 				}
 			}
 			if (g == 0) {
+				cout << "Enter " << _str[i] << ": ";
 				B[f] = _str[i];
 				f++;
 				cin >> VO[c];

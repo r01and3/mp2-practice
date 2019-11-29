@@ -15,7 +15,6 @@ public:
 	bool IsEmpty() const;
 	bool IsFull() const;
 	ValueType TopElems() const;
-	TStack<ValueType>& operator=(const TStack<ValueType>&);
 };
 
 template<class ValueType>
@@ -67,17 +66,4 @@ ValueType TStack<ValueType>::Pop() {
 template<class ValueType>
 ValueType TStack<ValueType>::TopElems() const {
 	return elems[top];
-}
-
-template<class ValueType>
-TStack<ValueType>& TStack<ValueType>::operator=(const TStack<ValueType> &_stack) {
-	if (this == &_stack) return *this;
-	if (size != _stack.size) {
-		delete[] elems;
-		size = _stack.size;
-		elems = new ValueType[size];
-	}
-	top = _stack.top;
-	for (int i = 0; i < size; i++) elems[i] = _stack.elems[i];
-	return *this;
 }

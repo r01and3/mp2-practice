@@ -10,6 +10,6 @@ private:
 	static double Calculator(double, double, char);
 public:
 	static string CreatePostFixForm(const string&);
-	static double Calculate(const string&, double*, int);
-	static double* GetValueOperands(const string&, int*);
+	static double Calculate(const string&, double*, char*, int);
+	static void GetValueOperands(const string&, double*&, char*&, int&);
 };

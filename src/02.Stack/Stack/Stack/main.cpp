@@ -16,8 +16,9 @@ void main() {
 		cout << "Polish notation:" << endl;
 		cout << g << endl;
 		double *V = new double[1];
-		V = c.GetValueOperands(g, k);
-		cout << "Expression value: " << c.Calculate(g, V, *k) << endl;
+		char *B = new char[1];
+		c.GetValueOperands(g, V, B, *k);
+		cout << "Expression value: " << c.Calculate(g, V, B, *k) << endl;
 	}
 	catch (char* f) {
 		cout << f << endl;

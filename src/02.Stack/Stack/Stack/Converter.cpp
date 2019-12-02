@@ -54,10 +54,9 @@ string Converter::CreatePostFixForm(const string &_str) {
 	return PostFixForm;
 }
 
-double Converter::Calculate(const string &_str, double* VO, int k) {
+double Converter::Calculate(const string &_str, double* VO, char* B, int k) {
 	TStack<double> e(k);
 	int l = _str.length();
-	int j = 0;
 	for (int i = 0; i < l; i++) {
 		if (_str[i] == '+' || _str[i] == '-' || _str[i] == '*' || _str[i] == '/') {
 			double a = e.Pop();
@@ -65,8 +64,9 @@ double Converter::Calculate(const string &_str, double* VO, int k) {
 			e.Push(Calculator(b, a, _str[i]));
 		}
 		else {
-			e.Push(VO[j]);
-			j++;
+			for (int j = 0; j < k; j++) 
+				if(B[j] == _str[i])
+					e.Push(VO[j]);
 		}
 	}
 	return e.Pop();
@@ -95,36 +95,28 @@ double Converter::Calculator(double a, double b, char o) {
 	}
 }
 
-double* Converter::GetValueOperands(const string &_str, int *ki) {
-	(*ki)--;
+void Converter::GetValueOperands(const string &_str, double* &VO, char* &B, int &ki) {
+	ki--;
 	for (int i = 0; i < _str.length(); i++)
 		if (_str[i] != '*' && _str[i] != '/' && _str[i] != '+' && _str[i] != '-')
-			(*ki)++;
-	double *VO = new double[(*ki)];
-	char* B = new char[(*ki)];
+			ki++;
+	VO = new double[ki];
+	B = new char[ki];
 	int c = 0;
-	int f = 0;
-	int g = 0;
+	int g;
 	for (int i = 0; i < _str.length(); i++) {
+		g = 0;
 		if (_str[i] != '*' && _str[i] != '/' && _str[i] != '+' && _str[i] != '-') {
-			for (int j = 0; j < f; j++) {
-				if (B[j] == _str[i]) {
-					B[f] = _str[i];
-					f++;
-					VO[c] = VO[j];
-					c++;
-					g = 1;
-					break;
-				}
+			for (int j = 0; j < c; j++) if (B[j] == _str[i]) {
+				g = 1;
+				break;
 			}
 			if (g == 0) {
+				B[c] = _str[i];
 				cout << "Enter " << _str[i] << ": ";
-				B[f] = _str[i];
-				f++;
 				cin >> VO[c];
 				c++;
 			}
 		}
 	}
-	return VO;
 }

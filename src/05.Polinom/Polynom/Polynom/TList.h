@@ -21,10 +21,10 @@ public:
 	void Reset();
 
 	TNode<TData, TKey>* Search(TKey);
-	void Back(TKey, TData*);
-	void Push(TKey, TData*);
-	void InsertAfter(TKey, TData*, TKey);
-	void InsertBefore(TKey, TData*, TKey);
+	void Back(TKey, TData);
+	void Push(TKey, TData);
+	void InsertAfter(TKey, TData, TKey);
+	void InsertBefore(TKey, TData, TKey);
 	void Remove(TKey);
 	friend ostream& operator << (ostream &out, TList<TData, TKey> &_list) {
 		if (_list.pFirst == 0) cout << "List is empty" << endl;
@@ -90,7 +90,7 @@ TList<TData, TKey>::~TList() {
 	TNode<TData, TKey>* del = pFirst;
 	while (del != 0) {
 		TNode<TData, TKey>* tmp = del->pNext;
-		delete del->pData;
+		//delete del->pData;
 		delete del;
 		del = tmp;
 	}
@@ -147,7 +147,7 @@ TNode<TData, TKey>* TList<TData, TKey>::Search(TKey key) {
 }
 
 template<class TData, class TKey>
-void TList<TData, TKey>::Push(TKey _key, TData* _data) {
+void TList<TData, TKey>::Push(TKey _key, TData _data) {
 	if (pFirst == 0) {
 		pFirst = new TNode<TData, TKey>(_key, _data);
 		pCurr = pFirst;
@@ -160,7 +160,7 @@ void TList<TData, TKey>::Push(TKey _key, TData* _data) {
 }
 
 template<class TData, class TKey>
-void TList<TData, TKey>::Back(TKey _key, TData* _data) {
+void TList<TData, TKey>::Back(TKey _key, TData _data) {
 	if (pFirst == 0) {
 		pFirst = new TNode<TData, TKey>(_key, _data);
 		pCurr = pFirst;
@@ -186,7 +186,7 @@ void TList<TData, TKey>::Back(TKey _key, TData* _data) {
 }
 
 template<class TData, class TKey>
-void TList<TData, TKey>::InsertAfter(TKey ikey, TData* data, TKey akey) {
+void TList<TData, TKey>::InsertAfter(TKey ikey, TData data, TKey akey) {
 	if (pFirst == 0) {
 		pFirst = new TNode<TData, TKey>(ikey, data);
 		pCurr = pFirst;
@@ -222,7 +222,7 @@ void TList<TData, TKey>::InsertAfter(TKey ikey, TData* data, TKey akey) {
 }
 
 template<class TData, class TKey>
-void TList<TData, TKey>::InsertBefore(TKey ikey, TData* data, TKey bkey) {
+void TList<TData, TKey>::InsertBefore(TKey ikey, TData data, TKey bkey) {
 	if (pFirst == 0) {
 		pFirst = new TNode<TData, TKey>(ikey, data);
 		pCurr = pFirst;

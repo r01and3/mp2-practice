@@ -20,7 +20,7 @@ Polynom::Polynom(const string _str) {
 			_monom += _sws[i++];
 		}
 		Monom monom = Monom(_monom);
-		monoms->Back(monom.key, &(monom.coef));
+		monoms->Back(monom.key, (monom.coef));
 	}
 }
 
@@ -34,7 +34,7 @@ Polynom Polynom::operator+(double _coef) {
 		res.monoms->pFirst->coef += _coef;
 		return res;
 	}
-	res.monoms->Push(0, &_coef);
+	res.monoms->Push(0, _coef);
 	return res;
 }
 
@@ -45,7 +45,7 @@ Polynom Polynom::operator-(double _coef) {
 		return res;
 	}
 	double __coef = -_coef;
-	res.monoms->Push(0, &__coef);
+	res.monoms->Push(0, __coef);
 	return res;
 }
 
@@ -56,35 +56,36 @@ Polynom Polynom::operator*(double _coef) {
 		res.monoms->pCurr->coef *= _coef;
 		res.monoms->Next();
 	}
+	return res;
 }
 
 Polynom Polynom::operator+(const Polynom &_polynom) {
 	Polynom res = Polynom();
 	while ((!monoms->IsEnded()) && (!_polynom.monoms->IsEnded())) {
 		if (monoms->pCurr->key < _polynom.monoms->pCurr->key) {
-			res.monoms->Back(monoms->pCurr->key, &monoms->pCurr->coef);
+			res.monoms->Back(monoms->pCurr->key, monoms->pCurr->coef);
 			monoms->Next();
 		}
 		if (monoms->pCurr->key > _polynom.monoms->pCurr->key) {
-			res.monoms->Back(_polynom.monoms->pCurr->key, &_polynom.monoms->pCurr->coef);
+			res.monoms->Back(_polynom.monoms->pCurr->key, _polynom.monoms->pCurr->coef);
 			_polynom.monoms->Next();
 		}
 		if (monoms->pCurr->key == _polynom.monoms->pCurr->key) {
 			Monom sum = Monom();
 			sum = *monoms->pCurr + (*_polynom.monoms->pCurr);
-			res.monoms->Back(sum.key, &sum.coef);
+			res.monoms->Back(sum.key, sum.coef);
 			monoms->Next();
 			_polynom.monoms->Next();
 		}
 	}
 	if (!monoms->IsEnded()) 
 		while (!_polynom.monoms->IsEnded()) {
-			res.monoms->Back(_polynom.monoms->pCurr->key, &_polynom.monoms->pCurr->coef);
+			res.monoms->Back(_polynom.monoms->pCurr->key, _polynom.monoms->pCurr->coef);
 			_polynom.monoms->Next();
 		}
 	if (!_polynom.monoms->IsEnded())
 		while (!monoms->IsEnded()) {
-			res.monoms->Back(monoms->pCurr->key, &monoms->pCurr->coef);
+			res.monoms->Back(monoms->pCurr->key, monoms->pCurr->coef);
 			monoms->Next();
 		}
 	return res;

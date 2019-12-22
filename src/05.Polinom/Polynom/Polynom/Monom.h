@@ -6,13 +6,13 @@
 
 template<>
 class Monom{
-private:
+public:
 	unsigned int key;
 	double coef;
 	Monom* pNext;
 public:
 	TNode();
-	TNode(double, unsigned int);
+	TNode(double, unsigned int, Monom* _pNext = 0);
 	TNode(const Monom&);
 	TNode(const string);
 	~TNode();
@@ -32,11 +32,11 @@ public:
 
 Monom::TNode() : key(0), coef(0), pNext(nullptr){}
 
-Monom::TNode(double _coef, unsigned int _key){
+Monom::TNode(double _coef, unsigned int _key, Monom* _pNext){
 	if (_key < 0 || _key > 999) throw "Invalid key";
 	key = _key;
 	coef = _coef;
-	pNext = nullptr;
+	pNext = _pNext;
 }
 
 Monom::TNode(const Monom &_monom) {
@@ -82,7 +82,7 @@ Monom::TNode(const string _str) {
 	else DEGREE += DEGREE_Y;
 	if (DEGREE_Y != "") DEGREE += '0';
 	else DEGREE += DEGREE_Y;
-	_key = stod(DEGREE);
+	_key = stoi(DEGREE);
 	if (_key > 999) throw "Invalid key";
 	_coef = stod(COEFFICIENT);
 	key = _key;

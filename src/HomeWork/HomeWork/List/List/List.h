@@ -289,7 +289,7 @@ void TList<TData, TKey>::Remove(TKey dkey) {
 	else if (pPrev == fpCurr) {
 		pPrev = fpPrev;
 		pCurr = fpCurr;
-		pNext = CopyCurr->pNext;
+		pNext = pPrev->pNext;
 	}
 	else if(pNext == fpCurr){
 		pCurr = fpCurr;

@@ -29,20 +29,43 @@ void main() {
 	cout << Lt3;
 
 	cout << "Insert after test" << endl;
-	Lt2.InsertAfter(7, a, 1);
-	Lt3.InsertAfter(8, a, 3);
-	cout << "Lt2:" << endl;
-	cout << Lt2;
-	cout << "Lt3:" << endl;
-	cout << Lt3;
+	try {
+		Lt2.InsertAfter(7, a, 1);
+		cout << "Lt2:" << endl;
+		cout << Lt2;
+	}
+	catch(char *c){
+		cout << c << endl;
+	}
+
+	try {
+		Lt3.InsertAfter(8, a, 3);
+		cout << "Lt3:" << endl;
+		cout << Lt3;
+	}
+	catch (char *c) {
+		cout << c << endl;
+	}
 
 	cout << "Insert before test" << endl;
-	Lt2.InsertBefore(9, a, 8);
-	Lt3.InsertBefore(10, a, 6);
-	cout << "Lt2:" << endl;
-	cout << Lt2;
-	cout << "Lt3:" << endl;
-	cout << Lt3;
+
+	try {
+		Lt2.InsertBefore(9, a, 8);
+		cout << "Lt2:" << endl;
+		cout << Lt2;
+	}
+	catch (char *c) {
+		cout << c << endl;
+	}
+
+	try {
+		Lt3.InsertBefore(10, a, 6);
+		cout << "Lt3:" << endl;
+		cout << Lt3;
+	}
+	catch (char *c) {
+		cout << c << endl;
+	}
 
 	cout << "Search test" << endl;
 	if (Lt2.Search(9) != 0)
@@ -51,24 +74,29 @@ void main() {
 		cout << *Lt3.Search(10);
 	
 	cout << "Remove test" << endl;
-	Lt2.Remove(1);
-	Lt3.Remove(3);
-	cout << "Lt2:" << endl;
-	cout << Lt2;
-	cout << "Lt3:" << endl;
-	cout << Lt3;
+	try {
+		Lt2.Remove(1);
+		cout << "Lt2:" << endl;
+		cout << Lt2;
+	}
+	catch (char *c) {
+		cout << c << endl;
+	}
+
+	try {
+		Lt3.Remove(3);
+		cout << "Lt3:" << endl;
+		cout << Lt3;
+	}
+	catch (char *c) {
+		cout << c << endl;
+	}
 
 	cout << "Exception situations" << endl;
 	TList<int, int> Lt4;
 	cout << "Attempt to withdraw Lt4: " << Lt4;
 	try {
 		Lt4.Remove(2);
-	}
-	catch (char* c) {
-		cout << c << endl;
-	}
-	try {
-		Lt4.Search(2);
 	}
 	catch (char* c) {
 		cout << c << endl;

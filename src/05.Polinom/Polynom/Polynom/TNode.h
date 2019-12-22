@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 template<class TData, class TKey>
 class TNode {
 public:
-	TData* pData;
+	TData pData;
 	TKey key;
 	TNode* pNext;
 public:

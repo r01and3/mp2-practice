@@ -1,5 +1,6 @@
 #pragma once
 #include "TNode.h"
+#include <string>
 
 #define Monom TNode<double, unsigned int>
 

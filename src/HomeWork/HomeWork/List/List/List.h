@@ -206,7 +206,6 @@ void TList<TData, TKey>::InsertAfter(TKey ikey, TData* data, TKey akey) {
 	if (pCurr == fpCurr) {
 		pNext = pCurr->pNext;
 		pPrev = fpPrev;
-		pCurr = fpCurr;
 	}
 	else if(pNext == fpCurr) {
 		pPrev = pCurr->pNext;
@@ -241,7 +240,6 @@ void TList<TData, TKey>::InsertBefore(TKey ikey, TData* data, TKey bkey) {
 	
 	if (pCurr == fpCurr) {
 		pPrev = pPrev->pNext;
-		pCurr = fpCurr;
 		pNext = fpNext;
 	}
 	else if (pPrev == fpCurr) {
@@ -267,36 +265,48 @@ void TList<TData, TKey>::Remove(TKey dkey) {
 	while ((!IsEnded()) && (pCurr->key != dkey))
 		Next();
 	if (pCurr == 0) throw "Item not listed";
-	TNode<TData, TKey>* CopyCurr = pCurr;
+	//TNode<TData, TKey>* CopyCurr = pCurr;
 	if (pCurr == pFirst) {
-		delete pFirst;
-		pFirst = pNext;
-		pPrev = 0;
-		pCurr = pFirst;
-		pNext = pCurr->pNext;
-		return;
+		if (fpCurr == pFirst) {
+			delete pFirst;
+			pFirst = pNext;
+			pCurr = pFirst;
+			// pCurr
+			pNext = pCurr->pNext;
+		}
+		else
+		{
+			delete pFirst;
+			pFirst = pNext;
+			pCurr = fpCurr;
+			pPrev = fpPrev;
+			pNext = fpNext;
+		}
 	}
-	else {
+	else if (pCurr == fpCurr) { ///!!!!
 		pPrev->pNext = pNext;
-		delete pCurr;
-	}
-
-	if (CopyCurr == fpCurr) {
+		delete pCurr; 
 		if (fpNext == 0) pNext = 0;
 		pNext = fpNext->pNext;
 		pPrev = fpPrev;
 		pCurr = fpNext;
 	}
 	else if (pPrev == fpCurr) {
+		pPrev->pNext = pNext;
+		delete pCurr;
 		pNext = pPrev->pNext;
 		pPrev = fpPrev;
 		pCurr = fpCurr;
 	}
 	else if(pNext == fpCurr){
+		pPrev->pNext = pNext;
+		delete pCurr;
 		pCurr = fpCurr;
 		pNext = fpNext;
 	}
 	else {
+		pPrev->pNext = pNext;
+		delete pCurr;
 		pCurr = fpCurr;
 		pPrev = fpPrev;
 		pNext = fpNext;

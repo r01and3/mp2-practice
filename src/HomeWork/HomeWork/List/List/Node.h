@@ -20,14 +20,16 @@ public:
 
 template<class TData, class TKey>
 TNode<TData, TKey>::TNode(const TNode<TData, TKey> &copy) {
-	pData = copy.pData;
+	pData = new TData;
+	*pData = *copy.pData;
 	key = copy.key;
 	pNext = copy.pNext;
 }
 
 template<class TData, class TKey>
 TNode<TData, TKey>::TNode(TKey _key, TData* _data, TNode* _pNext) {
-	pData = _data;
+	pData = new TData;
+	*pData = *_data;
 	key = _key;
 	pNext = _pNext;
 }

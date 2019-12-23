@@ -1,6 +1,6 @@
 #pragma once
-#include "Monom.h"
 #include "TList.h"
+#include "Monom.h"
 
 class Polynom {
 private:
@@ -16,10 +16,10 @@ public:
 	Polynom operator*(double);
 
 	Polynom operator+(const Polynom&);
-	Polynom operator-(const Polynom&);
+	/*Polynom operator-(const Polynom&);
 	Polynom operator*(const Polynom&);
 
 	Polynom& operator=(const Polynom&);
 
-	bool operator==(const Polynom&) const;
+	bool operator==(const Polynom&) const;*/
 };

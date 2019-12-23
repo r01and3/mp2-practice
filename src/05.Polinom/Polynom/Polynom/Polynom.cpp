@@ -9,6 +9,7 @@ Polynom::Polynom(const Polynom &_polynom) {
 }
 
 Polynom::Polynom(const string _str) {
+	monoms = new TList<double, unsigned int>();
 	string _sws = "";
 	for (int i = 0; i < _str.length(); i++) {
 		if ((_str[i] != '*') && (_str[i] != '^')) _sws += _str[i];
@@ -25,7 +26,7 @@ Polynom::Polynom(const string _str) {
 }
 
 Polynom::~Polynom() {
-	delete[] monoms;
+	delete monoms;
 }
 
 Polynom Polynom::operator+(double _coef) {

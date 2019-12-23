@@ -1,6 +1,5 @@
 #pragma once
 #include "TNode.h"
-#include <string>
 
 #define Monom TNode<double, unsigned int>
 
@@ -11,21 +10,21 @@ public:
 	double coef;
 	Monom* pNext;
 public:
-	TNode();
-	TNode(double, unsigned int, Monom* _pNext = 0);
-	TNode(const Monom&);
-	TNode(const string);
-	~TNode();
+	inline TNode();
+	inline TNode(double, unsigned int, Monom* _pNext = 0);
+	inline TNode(const Monom&);
+	inline TNode(const string);
+	inline ~TNode();
 
-	Monom operator*(double);
+	inline Monom operator*(double);
 
-	Monom operator+(const Monom&);
-	Monom operator-(const Monom&);
-	Monom operator*(const Monom&);
+	inline Monom operator+(const Monom&);
+	inline Monom operator-(const Monom&);
+	inline Monom operator*(const Monom&);
 
-	Monom& operator=(const Monom&);
+	inline Monom& operator=(const Monom&);
 
-	bool operator==(const Monom&) const;
+	inline bool operator==(const Monom&) const;
 
 	friend class Polynom;
 };
@@ -91,7 +90,7 @@ Monom::TNode(const string _str) {
 }
 
 Monom::~TNode() {
-	delete[] this;
+	pNext = nullptr;
 }
 
 Monom Monom::operator*(double _coef) {

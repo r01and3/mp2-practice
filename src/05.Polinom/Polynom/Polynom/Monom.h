@@ -1,133 +1,84 @@
 #pragma once
 #include "TNode.h"
 
-#define Monom TNode<double, unsigned int>
-
-template<>
-class Monom{
+class Monom : public TNode<double, unsigned int> {
 public:
-	unsigned int key;
-	double coef;
-	Monom* pNext;
-public:
-	inline TNode();
-	inline TNode(double, unsigned int, Monom* _pNext = 0);
-	inline TNode(const Monom&);
-	inline TNode(const string);
-	inline ~TNode();
+	Monom(const Monom&);
+	Monom(unsigned int, double, Monom* _monom = 0);
+	~Monom();
 
-	inline Monom operator*(double);
+	Monom operator*(double);
 
-	inline Monom operator+(const Monom&);
-	inline Monom operator-(const Monom&);
-	inline Monom operator*(const Monom&);
+	Monom operator+(const Monom&);
+	Monom operator-(const Monom&);
+	Monom operator*(const Monom&);
 
-	inline Monom& operator=(const Monom&);
+	Monom& operator=(const Monom&);
 
-	inline bool operator==(const Monom&) const;
-
-	friend class Polynom;
+	bool operator>(const Monom&) const;
+	bool operator<(const Monom&) const;
+	bool operator==(const Monom&) const;
 };
 
-Monom::TNode() : key(0), coef(0), pNext(nullptr){}
+Monom::Monom(const Monom& _monom) : TNode<double, unsigned int>(_monom) {}
 
-Monom::TNode(double _coef, unsigned int _key, Monom* _pNext){
-	if (_key < 0 || _key > 999) throw "Invalid key";
-	key = _key;
-	coef = _coef;
-	pNext = _pNext;
+Monom::Monom(unsigned int _key, double _pData, Monom* _monom) : TNode<double, unsigned int>(_key, _pData, _monom) {
+	if (_key < 0 || _key > 999 || _pData == 0.0) throw "Incorrect monom";
 }
 
-Monom::TNode(const Monom &_monom) {
-	key = _monom.key;
-	coef = _monom.coef;
-	if (_monom.pNext != nullptr) {
-		pNext = new Monom;
-		*pNext = *(_monom.pNext);
-	}
-	else pNext = nullptr;
+Monom::~Monom() {
+	delete[] pNext;
 }
 
-Monom::TNode(const string _str) {
-	if (_str == "") throw "An empty string cannot be converted to monomial";
-	double _coef = 0;
-	unsigned int _key = 0;
-	int j = 0;
-	string _sws = "";
-	string COEFFICIENT = "";
-	string DEGREE = "";
-	string DEGREE_X = "";
-	string DEGREE_Y = "";
-	string DEGREE_Z = "";
-	for (int i = 0; i < _str.length(); i++)
-		if ((_str[i] != '*') && (_str[i] != '^')) _sws += _str[i];
-	while ((_sws[j] != 'x') && (_sws[j] != 'y') && (_sws[j] != 'z')) {
-		COEFFICIENT += _str[j++];
-	}
-	for (int i = 0; i < _sws.length(); i++) {
-		if (_sws[i] == 'x') {
-			DEGREE_X += _sws[++i];
-		}
-		if (_sws[i] == 'y') {
-			DEGREE_Y += _sws[++i];
-		}
-		if (_sws[i] == 'z') {
-			DEGREE_Z += _sws[++i];
-		}
-	}
-	if (DEGREE_X != "") DEGREE += '0';
-	else DEGREE += DEGREE_X;
-	if (DEGREE_Y != "") DEGREE += '0';
-	else DEGREE += DEGREE_Y;
-	if (DEGREE_Y != "") DEGREE += '0';
-	else DEGREE += DEGREE_Y;
-	_key = stoi(DEGREE);
-	if (_key > 999) throw "Invalid key";
-	_coef = stod(COEFFICIENT);
-	key = _key;
-	coef = _coef;
-	pNext = nullptr;
+Monom Monom::operator*(double _factor) {
+	Monom result(*this);
+	result.pData *= _factor;
+	return result;
 }
 
-Monom::~TNode() {
-	pNext = nullptr;
+Monom Monom::operator+(const Monom& _monom) {
+	if (key != _monom.key) return *this;
+	Monom result(*this);
+	result.pData += _monom.pData;
+	return result;
 }
 
-Monom Monom::operator*(double _coef) {
-	Monom res = Monom(*this);
-	res.coef *= _coef;
-	return res;
+Monom Monom::operator-(const Monom& _monom) {
+	if (key != _monom.key) return *this;
+	Monom result(*this);
+	result.pData -= _monom.pData;
+	return result;
 }
 
-Monom Monom::operator+(const Monom &_monom) {
-	if (this->key != _monom.key) return Monom(0, 0);
-	Monom res = Monom(*this);
-	res.coef += _monom.coef;
-	return res;
+Monom Monom::operator*(const Monom& _monom) {
+	if (key + _monom.key < 0 || key + _monom.key > 999) throw "Incorrect degree";
+	Monom result(*this);
+	result.pData *= _monom.pData;
+	result.key += _monom.key;
+	return result;
 }
 
-Monom Monom::operator-(const Monom &_monom) {
-	if (this->key != _monom.key) return Monom(0, 0);
-	Monom res = Monom(*this);
-	res.coef -= _monom.coef;
-	return res;
-}
-
-Monom Monom::operator*(const Monom &_monom) {
-	if ((this->key + _monom.key) > 999) throw "Excess degree";
-	Monom res = Monom(*this);
-	res.coef *= _monom.coef;
-	res.key += _monom.key;
-	return res;
-}
-
-Monom& Monom::operator=(const Monom &_monom) {
+Monom& Monom::operator=(const Monom& _monom) {
 	if (*this == _monom) return *this;
+	delete this;
 	key = _monom.key;
-	coef = _monom.coef;
+	pData = _monom.pData;
 	pNext = _monom.pNext;
 }
 
-bool Monom::operator==(const Monom &_monom) const{
-	return((key == _monom.key) && (coef == _monom.coef));
+bool Monom::operator<(const Monom& _monom) const {
+	if (key < _monom.key) return true;
+	if (key == _monom.key && pData < _monom.pData) return true;
+	return false;
+}
+
+bool Monom::operator>(const Monom& _monom) const {
+	if (key > _monom.key) return true;
+	if (key == _monom.key && pData > _monom.pData) return true;
+	return false;
+}
+
+bool Monom::operator==(const Monom& _monom) const {
+	if (!(*this < _monom) && !(*this > _monom)) return true;
+	return false;
 }

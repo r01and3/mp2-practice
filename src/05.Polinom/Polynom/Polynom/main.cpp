@@ -3,17 +3,22 @@
 #include "Polynom.h"
 
 void main() {
-	Monom monom1(890, 12);
-	Monom monom2(106, 30);
-	Monom monom3 = monom1 + monom2;
-	string str = "2*x^4*y^5*z^6+5*x^3*y^7-2*y^4*x^5";
-	Polynom monom4(str);
-	Polynom poly1;
-	Polynom poly2;
-	poly1 = poly1 + monom1;
-	poly1 = poly1 - monom2;
-	poly2 = poly2 + monom3;
-	poly1 = poly1 + poly2;
-	poly1 = poly1 * poly2;
-	cout << (monom1 > monom2);
+	try {
+		string str_1 = "2*x*y^2*z^3+3*x^3*y^2*z-4*x^4*y^4*z^4";
+		string str_2 = "3*x^2*y*z^3-3*x^3*y^2*z-4*x^4*y^4*z^4";
+		Polynom polynom_1(str_1);
+		Polynom polynom_2(str_2);
+		cout << polynom_1 << endl;
+		cout << polynom_2 << endl;
+		Polynom polynom_o;
+		polynom_o = polynom_1 + polynom_2;
+		cout << polynom_o << endl;
+		polynom_o = polynom_1 - polynom_2;
+		cout << polynom_o << endl;
+		polynom_o = polynom_1 * polynom_2;
+		cout << polynom_o << endl;
+	}
+	catch (const exception & e) {
+		cout << e.what() << endl;
+	}
 }

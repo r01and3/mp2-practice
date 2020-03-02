@@ -43,6 +43,7 @@ public:
 	}
 
 	friend class Polynom;
+	friend ostream& operator<<(ostream&, Polynom&);
 };
 
 template<class TData, class TKey>
@@ -119,6 +120,7 @@ void TList<TData, TKey>::Next() {
 	pCurr = pNext;
 	if (pNext != 0)
 		pNext = pNext->pNext;
+	else pNext = 0;
 }
 
 template<class TData, class TKey>

@@ -3,6 +3,9 @@
 
 using namespace std;
 
+//template<class TData, class TKey, class TListNode> - объ€вление
+//template<double, unsigned int, TNode<double, unsingned int> > - создание
+//template<double, unsigned int, TMonom > - создание
 template<class TData, class TKey>
 class TList {
 protected:
@@ -42,8 +45,8 @@ public:
 		return out;
 	}
 
-	friend class Polynom;
-	friend ostream& operator<<(ostream&, Polynom&);
+	friend class Polynom;//////////////////
+	friend ostream& operator<<(ostream&, Polynom&); ///////////
 };
 
 template<class TData, class TKey>

@@ -69,25 +69,25 @@ Monom Monom::operator-() const{
 
 Monom& Monom::operator=(const Monom& _monom) {
 	if (*this == _monom) return *this;
-	delete this;
 	key = _monom.key;
 	pData = _monom.pData;
 	pNext = _monom.pNext;
+	return *this;
 }
 
 bool Monom::operator<(const Monom& _monom) const {
 	if (key < _monom.key) return true;
-	if (key == _monom.key && pData < _monom.pData) return true;
+	if (key == _monom.key && pData < _monom.pData) return true; ////// !!!!
 	return false;
 }
 
 bool Monom::operator>(const Monom& _monom) const {
 	if (key > _monom.key) return true;
-	if (key == _monom.key && pData > _monom.pData) return true;
+	if (key == _monom.key && pData > _monom.pData) return true; ////// !!!!
 	return false;
 }
 
 bool Monom::operator==(const Monom& _monom) const {
-	if (!(*this < _monom) && !(*this > _monom)) return true;
+	if (!(*this < _monom) && !(*this > _monom)) return true; ////// !!!!
 	return false;
 }

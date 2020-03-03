@@ -4,29 +4,32 @@
 #include <string>
 
 class Polynom {
-public:
+private:
+	// TList<double, unsigned int, TMonom>
 	TList<double, unsigned int>* monoms;
 
+	//void Parse(const string&);
+public:
 	Polynom();
 	Polynom(const Polynom&);
-	Polynom(string);
+	Polynom(string);// const string&
 	~Polynom();
 
 	Polynom operator+(const Monom&);
 	Polynom operator-(const Monom&);
 	Polynom operator*(const Monom&);
 
-	Polynom operator+=(const Monom&);
-	Polynom operator-=(const Monom&);
-	Polynom operator*=(const Monom&);
+	Polynom operator+=(const Monom&); //Polynom&
+	Polynom operator-=(const Monom&); //Polynom&
+	Polynom operator*=(const Monom&); //Polynom&
 
 	Polynom operator+(const Polynom&);
 	Polynom operator-(const Polynom&);
 	Polynom operator*(const Polynom&);
 
-	Polynom operator+=(const Polynom&);
-	Polynom operator-=(const Polynom&);
-	Polynom operator*=(const Polynom&);
+	Polynom operator+=(const Polynom&); //Polynom&
+	Polynom operator-=(const Polynom&); //Polynom&
+	Polynom operator*=(const Polynom&); //Polynom&
 
 	Polynom operator-() const;
 
@@ -34,9 +37,11 @@ public:
 
 	bool operator==(const Polynom&) const;
 
-	friend ostream& operator<<(ostream&, Polynom&);
+	friend ostream& operator<<(ostream&, Polynom&); // const Polynom&
+	// friend istream& operator>>(istream&, Polynom&);
 };
 
+////// .cpp
 Polynom::Polynom() {
 	monoms = new TList<double, unsigned int>;
 }
@@ -121,15 +126,18 @@ Polynom Polynom::operator+(const Monom& _monom) {
 	Polynom result(*this);
 	unsigned int _bkey = 0;
 	result.monoms->Reset();
+	// while (!result.monoms->IsEnded() && (result.monoms->pCurr->key <= _monom.key)) result.monoms->Next();
 	while (!result.monoms->IsEnded()) {
 		if (result.monoms->pCurr->key == _monom.key) {
 			result.monoms->pCurr->pData += _monom.pData;
 			if (result.monoms->pCurr->pData == 0) result.monoms->Remove(_monom.key);
+			result.monoms->Reset();
 			return result;
 		}
 		if (result.monoms->pCurr->key > _monom.key) {
 			_bkey = result.monoms->pCurr->key;
 			result.monoms->InsertBefore(_monom.key, _monom.pData, _bkey);
+			result.monoms->Reset();
 			return result;
 		}
 		result.monoms->Next();
@@ -144,12 +152,16 @@ Polynom Polynom::operator-(const Monom& _monom) {
 }
 
 Polynom Polynom::operator*(const Monom& _monom) {
-	monoms->Reset();
-	while (!monoms->IsEnded()) {
-		monoms->Next();
-	}
-	if (monoms->pPrev->key + _monom.key < 0 || monoms->pPrev->key + _monom.key > 999) throw exception("Incorrect degree");
+	// _monom.pData == 0
 	Polynom result(*this);
+	result.monoms->Reset();
+	result.monoms->Reset();
+	while (!result.monoms->IsEnded()) {
+		result.monoms->Next();
+	}
+	if (result.monoms->pPrev->key + _monom.key < 0 || 
+		result.monoms->pPrev->key + _monom.key > 999)
+		throw exception("Incorrect degree");
 	result.monoms->Reset();
 	while (!result.monoms->IsEnded()) {
 		result.monoms->pCurr->key += _monom.key;
@@ -161,13 +173,15 @@ Polynom Polynom::operator*(const Monom& _monom) {
 }
 
 Polynom Polynom::operator+=(const Monom& _monom) {
-	Polynom copy = *this;
+	Polynom copy(*this);
 	*this = copy + _monom;
 	return *this;
 }
 
 Polynom Polynom::operator-=(const Monom& _monom) {
-	return *this += (-_monom);
+	Polynom copy(*this);
+	*this = copy - _monom;
+	return *this;
 }
 
 Polynom Polynom::operator*=(const Monom& _monom) {
@@ -227,17 +241,17 @@ Polynom Polynom::operator*(const Polynom& _polynom) {
 }
 
 Polynom Polynom::operator+=(const Polynom& _polynom) {
-	Polynom copy = *this;
+	Polynom copy(*this);
 	*this = copy + _polynom;
 	return *this;
 }
 
 Polynom Polynom::operator-=(const Polynom& _polynom) {
-	return *this += (-_polynom);
+	return *this += (-_polynom); //////////
 }
 
 Polynom Polynom::operator*=(const Polynom& _polynom) {
-	Polynom copy = *this;
+	Polynom copy(*this);
 	*this = copy * _polynom;
 	return *this;
 }
@@ -246,7 +260,7 @@ Polynom Polynom::operator-() const{
 	Polynom result(*this);
 	result.monoms->Reset();
 	while (!result.monoms->IsEnded()) {
-		result.monoms->pCurr->pData *= -1;
+		result.monoms->pCurr->pData *= -1; // (*result.monoms->pCurr) = -(*result.monoms->pCurr)
 		result.monoms->Next();
 	}
 	return result;

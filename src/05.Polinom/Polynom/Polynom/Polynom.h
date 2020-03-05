@@ -5,10 +5,9 @@
 
 class Polynom {
 private:
-	// TList<double, unsigned int, TMonom>
-	TList<double, unsigned int>* monoms;
+	TList<double, unsigned int, Monom>* monoms;
 
-	//void Parse(const string&);
+	void Parse(const string&);
 public:
 	Polynom();
 	Polynom(const Polynom&);
@@ -19,17 +18,17 @@ public:
 	Polynom operator-(const Monom&);
 	Polynom operator*(const Monom&);
 
-	Polynom operator+=(const Monom&); //Polynom&
-	Polynom operator-=(const Monom&); //Polynom&
-	Polynom operator*=(const Monom&); //Polynom&
+	Polynom& operator+=(const Monom&); //Polynom&
+	Polynom& operator-=(const Monom&); //Polynom&
+	Polynom& operator*=(const Monom&); //Polynom&
 
 	Polynom operator+(const Polynom&);
 	Polynom operator-(const Polynom&);
 	Polynom operator*(const Polynom&);
 
-	Polynom operator+=(const Polynom&); //Polynom&
-	Polynom operator-=(const Polynom&); //Polynom&
-	Polynom operator*=(const Polynom&); //Polynom&
+	Polynom& operator+=(const Polynom&); //Polynom&
+	Polynom& operator-=(const Polynom&); //Polynom&
+	Polynom& operator*=(const Polynom&); //Polynom&
 
 	Polynom operator-() const;
 
@@ -37,30 +36,59 @@ public:
 
 	bool operator==(const Polynom&) const;
 
-	friend ostream& operator<<(ostream&, Polynom&); // const Polynom&
+	friend ostream& operator<<(ostream&, const Polynom&); // const Polynom&
 	// friend istream& operator>>(istream&, Polynom&);
 };
 
+void Polynom::Parse(const string& _str) {
+	if (_str[0] == '+') throw exception("Invalid polynom");
+	if (_str[_str.length() - 1] == '+' || _str[_str.length() - 1] == '-') throw exception("Invalid polynom");
+	for (int i = 0; i < _str.length(); i++)
+		if (_str[i] == ' ') throw exception("Invalid polynom");
+	for (int i = 0; i < _str.length() - 1; i++) 
+		if (_str[i] == '+' && _str[i + 1] == '+' ||
+			_str[i] == '+' && _str[i + 1] == '-' || 
+			_str[i] == '-' && _str[i + 1] == '+' || 
+			_str[i] == '-' && _str[i + 1] == '-' ||
+			_str[i] == '*' && _str[i + 1] == '*' || 
+			_str[i] == '*' && _str[i + 1] == '^' || 
+			_str[i] == '^' && _str[i + 1] == '*' || 
+			_str[i] == '^' && _str[i + 1] == '^' || 
+			_str[i] == '+' && _str[i + 1] == '*' || 
+			_str[i] == '+' && _str[i + 1] == '^' || 
+			_str[i] == '*' && _str[i + 1] == '+' || 
+			_str[i] == '^' && _str[i + 1] == '+' || 
+			_str[i] == '-' && _str[i + 1] == '*' || 
+			_str[i] == '-' && _str[i + 1] == '^' || 
+			_str[i] == '*' && _str[i + 1] == '-' || 
+			_str[i] == '^' && _str[i + 1] == '-' ) throw exception("Invalid polynom");
+	for (int i = 0; i < _str.length() - 2; i++)
+		if (_str[i] == '^' 
+			&& (_str[i + 1] != 'x' || _str[i + 1] != 'y' || _str[i + 1] != 'z') 
+			&& (_str[i + 2] != 'x' || _str[i + 2] != 'y' || _str[i + 2] != 'z')) throw exception("Invalid polynom");
+} 
+
 ////// .cpp
 Polynom::Polynom() {
-	monoms = new TList<double, unsigned int>;
+	monoms = new TList<double, unsigned int, Monom>;
 }
 
 Polynom::Polynom(const Polynom& _polynom) {
-	monoms = new TList<double, unsigned int>(*_polynom.monoms);
+	monoms = new TList<double, unsigned int, Monom>(*_polynom.monoms);
 }
 
 Polynom::Polynom(string str) {
-	monoms = new TList<double, unsigned int>;
+	monoms = new TList<double, unsigned int, Monom>;
 	string sws;
-	for (int i = 0; i < str.length(); i++) {
+	Parse(str);
+	/*for (int i = 0; i < str.length(); i++) {
 		if (str[i] != '^' && str[i] != '*') sws += str[i];
 	}
 	if (sws[0] == '+') throw exception("Incorrect str");
 	if (sws[sws.length() - 1] == '+' || sws[sws.length() - 1] == '-') throw exception("Incorrect str");
 	for (int i = 0; i < sws.length(); i++) if (sws[i] == ' ') throw exception("Incorrect str");
 	for (int i = 1; i < sws.length(); i++) if ((sws[i] == 'x' && sws[i - 1] == 'x') || (sws[i] == 'y' && sws[i - 1] == 'y') || (sws[i] == 'z' && sws[i - 1] == 'z')) throw exception("Incorrect str");
-	for (int i = 1; i < sws.length(); i++) if ((sws[i] == '+' && sws[i - 1] == '+') || (sws[i] == '+' && sws[i - 1] == '-') || (sws[i] == '-' && sws[i - 1] == '+') || (sws[i] == '-' && sws[i - 1] == '-')) throw exception("Incorrect str");
+	for (int i = 1; i < sws.length(); i++) if ((sws[i] == '+' && sws[i - 1] == '+') || (sws[i] == '+' && sws[i - 1] == '-') || (sws[i] == '-' && sws[i - 1] == '+') || (sws[i] == '-' && sws[i - 1] == '-')) throw exception("Incorrect str");*/
 	int i = 0;
 	while (i < sws.length()) {
 		string coef;
@@ -124,25 +152,19 @@ Polynom::~Polynom() {
 
 Polynom Polynom::operator+(const Monom& _monom) {
 	Polynom result(*this);
-	unsigned int _bkey = 0;
 	result.monoms->Reset();
-	// while (!result.monoms->IsEnded() && (result.monoms->pCurr->key <= _monom.key)) result.monoms->Next();
-	while (!result.monoms->IsEnded()) {
-		if (result.monoms->pCurr->key == _monom.key) {
-			result.monoms->pCurr->pData += _monom.pData;
-			if (result.monoms->pCurr->pData == 0) result.monoms->Remove(_monom.key);
-			result.monoms->Reset();
-			return result;
-		}
-		if (result.monoms->pCurr->key > _monom.key) {
-			_bkey = result.monoms->pCurr->key;
-			result.monoms->InsertBefore(_monom.key, _monom.pData, _bkey);
-			result.monoms->Reset();
-			return result;
-		}
-		result.monoms->Next();
+	unsigned int _bkey = 0;
+	while (!result.monoms->IsEnded() && (*result.monoms->pCurr < _monom || *result.monoms->pCurr == _monom)) result.monoms->Next();
+	if (!result.monoms->IsEnded())
+		result.monoms->Back(_monom.key, _monom.pData);
+	if (*result.monoms->pCurr < _monom) {
+		_bkey = result.monoms->pCurr->key;
+		result.monoms->InsertBefore(_monom.key, _monom.pData, _bkey);
 	}
-	result.monoms->Back(_monom.key, _monom.pData);
+	if (*result.monoms->pCurr == _monom) {
+		*result.monoms->pCurr = *result.monoms->pCurr + _monom;
+		if (result.monoms->pCurr->pData == 0) result.monoms->Remove(_monom.key);
+	}
 	result.monoms->Reset();
 	return result;
 }
@@ -152,40 +174,30 @@ Polynom Polynom::operator-(const Monom& _monom) {
 }
 
 Polynom Polynom::operator*(const Monom& _monom) {
-	// _monom.pData == 0
 	Polynom result(*this);
 	result.monoms->Reset();
-	result.monoms->Reset();
 	while (!result.monoms->IsEnded()) {
-		result.monoms->Next();
-	}
-	if (result.monoms->pPrev->key + _monom.key < 0 || 
-		result.monoms->pPrev->key + _monom.key > 999)
-		throw exception("Incorrect degree");
-	result.monoms->Reset();
-	while (!result.monoms->IsEnded()) {
-		result.monoms->pCurr->key += _monom.key;
-		result.monoms->pCurr->pData *= _monom.pData;
+		*result.monoms->pCurr = *result.monoms->pCurr * _monom;
 		result.monoms->Next();
 	}
 	result.monoms->Reset();
 	return result;
 }
 
-Polynom Polynom::operator+=(const Monom& _monom) {
+Polynom& Polynom::operator+=(const Monom& _monom) {
 	Polynom copy(*this);
 	*this = copy + _monom;
 	return *this;
 }
 
-Polynom Polynom::operator-=(const Monom& _monom) {
+Polynom& Polynom::operator-=(const Monom& _monom) {
 	Polynom copy(*this);
 	*this = copy - _monom;
 	return *this;
 }
 
-Polynom Polynom::operator*=(const Monom& _monom) {
-	Polynom copy = *this;
+Polynom& Polynom::operator*=(const Monom& _monom) {
+	Polynom copy(*this);
 	*this = copy * _monom;
 	return *this;
 }
@@ -195,17 +207,17 @@ Polynom Polynom::operator+(const Polynom& _polynom) {
 	monoms->Reset();
 	_polynom.monoms->Reset();
 	while (!monoms->IsEnded() && !_polynom.monoms->IsEnded()) {
-		if (monoms->pCurr->key < _polynom.monoms->pCurr->key) {
+		if (*monoms->pCurr < *_polynom.monoms->pCurr) {
 			result.monoms->Back(monoms->pCurr->key, monoms->pCurr->pData);
 			result.monoms->Reset();
 			monoms->Next();
 		}
-		else if (monoms->pCurr->key > _polynom.monoms->pCurr->key) {
+		else if (*monoms->pCurr > *_polynom.monoms->pCurr) {
 			result.monoms->Back(_polynom.monoms->pCurr->key, _polynom.monoms->pCurr->pData);
 			result.monoms->Reset();
 			_polynom.monoms->Next();
 		}
-		else if (monoms->pCurr->key == _polynom.monoms->pCurr->key) {
+		else if (*monoms->pCurr == *_polynom.monoms->pCurr) {
 			if (monoms->pCurr->pData + _polynom.monoms->pCurr->pData != 0.0) {
 				result.monoms->Back(monoms->pCurr->key, (monoms->pCurr->pData + _polynom.monoms->pCurr->pData));
 				result.monoms->Reset();
@@ -234,23 +246,25 @@ Polynom Polynom::operator*(const Polynom& _polynom) {
 	Polynom result;
 	_polynom.monoms->Reset();
 	while (!_polynom.monoms->IsEnded()) {
-		result = result + (*this * (Monom)(*_polynom.monoms->pCurr));
+		result = result + (*this * *_polynom.monoms->pCurr);
 		_polynom.monoms->Next();
 	}
 	return result;
 }
 
-Polynom Polynom::operator+=(const Polynom& _polynom) {
+Polynom& Polynom::operator+=(const Polynom& _polynom) {
 	Polynom copy(*this);
 	*this = copy + _polynom;
 	return *this;
 }
 
-Polynom Polynom::operator-=(const Polynom& _polynom) {
-	return *this += (-_polynom); //////////
+Polynom& Polynom::operator-=(const Polynom& _polynom) {
+	Polynom copy(*this);
+	*this = copy - _polynom;
+	return *this;
 }
 
-Polynom Polynom::operator*=(const Polynom& _polynom) {
+Polynom& Polynom::operator*=(const Polynom& _polynom) {
 	Polynom copy(*this);
 	*this = copy * _polynom;
 	return *this;
@@ -260,7 +274,7 @@ Polynom Polynom::operator-() const{
 	Polynom result(*this);
 	result.monoms->Reset();
 	while (!result.monoms->IsEnded()) {
-		result.monoms->pCurr->pData *= -1; // (*result.monoms->pCurr) = -(*result.monoms->pCurr)
+		(*result.monoms->pCurr) = -(*result.monoms->pCurr);// result.monoms->pCurr->pData *= -1;
 		result.monoms->Next();
 	}
 	return result;
@@ -269,7 +283,7 @@ Polynom Polynom::operator-() const{
 Polynom& Polynom::operator=(const Polynom& _polynom) {
 	if (*this == _polynom) return *this;
 	delete monoms;
-	monoms = new TList<double, unsigned int>(*(_polynom.monoms));
+	monoms = new TList<double, unsigned int, Monom>(*(_polynom.monoms));
 	monoms->Reset();
 	return *this;
 }
@@ -286,7 +300,7 @@ bool Polynom::operator==(const Polynom& _polynom) const{
 	return true;
 }
 
-ostream& operator<<(ostream& out, Polynom& _polynom) {
+ostream& operator<<(ostream& out, const Polynom& _polynom) {
 	_polynom.monoms->Reset();
 	while (!_polynom.monoms->IsEnded()) {
 		if(_polynom.monoms->pCurr->pData > 0)

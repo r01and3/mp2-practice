@@ -1,5 +1,6 @@
 #pragma once
 #include "TNode.h"
+#include <string>
  
 template<>
 class TNode<double, unsigned int> {
@@ -10,6 +11,7 @@ public:
 
 	TNode(const TNode&);
 	TNode(unsigned int, double, TNode* _monom = 0);
+	TNode(const string&);
 	~TNode();
 
 	TNode operator*(double);
@@ -45,6 +47,45 @@ TNode<double, unsigned int>::TNode(unsigned int _key, double _pData, TNode* _mon
 	if (_monom == NULL)
 		pNext = NULL;
 	pNext = _monom;
+}
+
+TNode<double, unsigned int>::TNode(const string& _str) {
+	string sws;
+	string _coef;
+	string _degree;
+	string _degreeX = "0";
+	string _degreeY = "0";
+	string _degreeZ = "0";
+	for (int i = 0; i < _str.length(); i++)
+		if (_str[i] != '*' && _str[i] != '^') sws += _str[i];
+	int i = 0;
+	if (sws[0] == 'x' || sws[0] == 'y' || sws[0] == 'z') _coef = '1';
+	while (sws[i] != 'x' && sws[i] != 'z' && sws[i] != 'y' && i < sws.length()) {
+		_coef += sws[i];
+		i++;
+	}
+	while (i < sws.length()) {
+		if (sws[i] == 'x') {
+			i++;
+			if (sws[i] == 'y' || sws[i] == 'z' || i == sws.length()) _degreeX = '1';
+			else _degreeX = sws[i];
+		}
+		if (sws[i] == 'y') {
+			i++;
+			if (sws[i] == 'x' || sws[i] == 'z' || i == sws.length()) _degreeY = '1';
+			else _degreeY = sws[i];
+		}
+		if (sws[i] == 'z') {
+			i++;
+			if (sws[i] == 'x' || sws[i] == 'y' || i == sws.length()) _degreeZ = '1';
+			else _degreeZ = sws[i];
+		}
+		i++;
+	}
+	_degree = _degree + _degreeX + _degreeY + _degreeZ;
+	key = stoi(_degree);
+	pData = stod(_coef);
+	pNext = NULL;
 }
 
 TNode<double, unsigned int>::~TNode() {}

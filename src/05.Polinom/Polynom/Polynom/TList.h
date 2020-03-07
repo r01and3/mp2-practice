@@ -3,9 +3,6 @@
 
 using namespace std;
 
-//template<class TData, class TKey, class TListNode> - объ€вление
-//template<double, unsigned int, TNode<double, unsingned int> > - создание
-//template<double, unsigned int, TMonom > - создание
 template<class TData, class TKey, class TListNode>
 class TList {
 protected:
@@ -45,8 +42,8 @@ public:
 		return out;
 	}
 
-	friend class Polynom;//////////////////
-	friend ostream& operator<<(ostream&, const Polynom&); ///////////
+	friend class Polynom;
+	friend ostream& operator<<(ostream&, const Polynom&);
 };
 
 template<class TData, class TKey, class TListNode>
@@ -75,7 +72,6 @@ TList<TData, TKey, TListNode>::TList(TListNode* list) {
 
 template<class TData, class TKey, class TListNode>
 TList<TData, TKey, TListNode>::TList(const TList<TData, TKey, TListNode>& list) {
-	//if (list.IsEnded()) throw "Empty link";
 	if (list.pFirst == 0) {
 		pFirst = 0;
 		pPrev = 0;

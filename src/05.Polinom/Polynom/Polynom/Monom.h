@@ -30,9 +30,9 @@ public:
 	bool operator!=(const TNode&) const;
 };
 
-typedef class TNode<double, unsigned int> Monom;
+typedef TNode<double, unsigned int> Monom;
 
-TNode<double, unsigned int>::TNode(const TNode& _monom) {
+TNode<double, unsigned int>::TNode(const TNode<double, unsigned int>& _monom) {
 	key = _monom.key;
 	pData = _monom.pData;
 	if (_monom.pNext == NULL)
@@ -40,7 +40,7 @@ TNode<double, unsigned int>::TNode(const TNode& _monom) {
 	pNext = _monom.pNext;
 }
 
-TNode<double, unsigned int>::TNode(unsigned int _key, double _pData, TNode* _monom) {
+TNode<double, unsigned int>::TNode(unsigned int _key, double _pData, TNode<double, unsigned int>* _monom) {
 	if (_key < 0 || _key > 999 || _pData == 0.0) throw exception("Incorrect monom");
 	key = _key;
 	pData = _pData;
@@ -96,21 +96,21 @@ TNode<double, unsigned int> TNode<double, unsigned int>::operator*(double _facto
 	return result;
 }
 
-TNode<double, unsigned int> TNode<double, unsigned int>::operator+(const TNode& _monom) {
+TNode<double, unsigned int> TNode<double, unsigned int>::operator+(const TNode<double, unsigned int>& _monom) {
 	if (key != _monom.key) return *this;
 	TNode<double, unsigned int> result(*this);
 	result.pData += _monom.pData;
 	return result;
 }
 
-TNode<double, unsigned int> TNode<double, unsigned int>::operator-(const TNode& _monom) {
+TNode<double, unsigned int> TNode<double, unsigned int>::operator-(const TNode<double, unsigned int>& _monom) {
 	if (key != _monom.key) return *this;
 	TNode<double, unsigned int> result(*this);
 	result.pData -= _monom.pData;
 	return result;
 }
 
-TNode<double, unsigned int> TNode<double, unsigned int>::operator*(const TNode& _monom) {
+TNode<double, unsigned int> TNode<double, unsigned int>::operator*(const TNode<double, unsigned int>& _monom) {
 	if (key + _monom.key < 0 || key + _monom.key > 999) throw "Incorrect degree";
 	TNode<double, unsigned int> result(*this);
 	result.pData *= _monom.pData;

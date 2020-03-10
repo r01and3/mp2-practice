@@ -26,6 +26,7 @@ public:
 	void InsertAfter(TKey, TData, TKey);
 	void InsertBefore(TKey, TData, TKey);
 	void Remove(TKey);
+	TListNode* ReturnCurrent() const;
 	friend ostream& operator << (ostream& out, TList<TData, TKey, TListNode>& _list) {
 		if (_list.pFirst == 0) cout << "List is empty" << endl;
 		TListNode* fpCurr = _list.pCurr;
@@ -41,9 +42,6 @@ public:
 		_list.pNext = fpNext;
 		return out;
 	}
-
-	friend class Polynom;
-	friend ostream& operator<<(ostream&, const Polynom&);
 };
 
 template<class TData, class TKey, class TListNode>
@@ -321,4 +319,9 @@ void TList<TData, TKey, TListNode>::Remove(TKey dkey) {
 		pPrev = fpPrev;
 		pNext = fpNext;
 	}
+}
+
+template<class TData, class TKey, class TListNode>
+TListNode* TList<TData, TKey, TListNode>::ReturnCurrent() const{
+	return pCurr;
 }

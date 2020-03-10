@@ -106,16 +106,16 @@ Polynom Polynom::operator+(const Monom& _monom) {
 	Polynom result(*this);
 	result.monoms->Reset();
 	unsigned int _bkey = 0;
-	while (!result.monoms->IsEnded() && (*result.monoms->pCurr < _monom || *result.monoms->pCurr == _monom)) result.monoms->Next();
+	while (!result.monoms->IsEnded() && (*result.monoms->ReturnCurrent() < _monom || *result.monoms->ReturnCurrent() == _monom)) result.monoms->Next();
 	if (result.monoms->IsEnded())
 		result.monoms->Back(_monom.key, _monom.pData);
-	else if (*result.monoms->pCurr > _monom) {
-		_bkey = result.monoms->pCurr->key;
+	else if (*result.monoms->ReturnCurrent() > _monom) {
+		_bkey = result.monoms->ReturnCurrent()->key;
 		result.monoms->InsertBefore(_monom.key, _monom.pData, _bkey);
 	}
-	else if (*result.monoms->pCurr == _monom) {
-		*result.monoms->pCurr = *result.monoms->pCurr + _monom;
-		if (result.monoms->pCurr->pData == 0) result.monoms->Remove(_monom.key);
+	else if (*result.monoms->ReturnCurrent() == _monom) {
+		*result.monoms->ReturnCurrent() = *result.monoms->ReturnCurrent() + _monom;
+		if (result.monoms->ReturnCurrent()->pData == 0) result.monoms->Remove(_monom.key);
 	}
 	result.monoms->Reset();
 	return result;
@@ -129,7 +129,7 @@ Polynom Polynom::operator*(const Monom& _monom) {
 	Polynom result(*this);
 	result.monoms->Reset();
 	while (!result.monoms->IsEnded()) {
-		*result.monoms->pCurr = *result.monoms->pCurr * _monom;
+		*result.monoms->ReturnCurrent() = *result.monoms->ReturnCurrent() * _monom;
 		result.monoms->Next();
 	}
 	result.monoms->Reset();
@@ -159,19 +159,19 @@ Polynom Polynom::operator+(const Polynom& _polynom) {
 	monoms->Reset();
 	_polynom.monoms->Reset();
 	while (!monoms->IsEnded() && !_polynom.monoms->IsEnded()) {
-		if (*monoms->pCurr < *_polynom.monoms->pCurr) {
-			result.monoms->Back(monoms->pCurr->key, monoms->pCurr->pData);
+		if (*monoms->ReturnCurrent() < *_polynom.monoms->ReturnCurrent()) {
+			result.monoms->Back(monoms->ReturnCurrent()->key, monoms->ReturnCurrent()->pData);
 			result.monoms->Reset();
 			monoms->Next();
 		}
-		else if (*monoms->pCurr > *_polynom.monoms->pCurr) {
-			result.monoms->Back(_polynom.monoms->pCurr->key, _polynom.monoms->pCurr->pData);
+		else if (*monoms->ReturnCurrent() > *_polynom.monoms->ReturnCurrent()) {
+			result.monoms->Back(_polynom.monoms->ReturnCurrent()->key, _polynom.monoms->ReturnCurrent()->pData);
 			result.monoms->Reset();
 			_polynom.monoms->Next();
 		}
-		else if (*monoms->pCurr == *_polynom.monoms->pCurr) {
-			if (monoms->pCurr->pData + _polynom.monoms->pCurr->pData != 0.0) {
-				result.monoms->Back(monoms->pCurr->key, (monoms->pCurr->pData + _polynom.monoms->pCurr->pData));
+		else if (*monoms->ReturnCurrent() == *_polynom.monoms->ReturnCurrent()) {
+			if (monoms->ReturnCurrent()->pData + _polynom.monoms->ReturnCurrent()->pData != 0.0) {
+				result.monoms->Back(monoms->ReturnCurrent()->key, (monoms->ReturnCurrent()->pData + _polynom.monoms->ReturnCurrent()->pData));
 				result.monoms->Reset();
 			}
 			monoms->Next();
@@ -179,11 +179,11 @@ Polynom Polynom::operator+(const Polynom& _polynom) {
 		}
 	}
 	while (!monoms->IsEnded()) {
-		result.monoms->Back(monoms->pCurr->key, monoms->pCurr->pData);
+		result.monoms->Back(monoms->ReturnCurrent()->key, monoms->ReturnCurrent()->pData);
 		monoms->Next();
 	}
 	while (!_polynom.monoms->IsEnded()) {
-		result.monoms->Back(_polynom.monoms->pCurr->key, _polynom.monoms->pCurr->pData);
+		result.monoms->Back(_polynom.monoms->ReturnCurrent()->key, _polynom.monoms->ReturnCurrent()->pData);
 		_polynom.monoms->Next();
 	}
 	result.monoms->Reset();
@@ -198,7 +198,7 @@ Polynom Polynom::operator*(const Polynom& _polynom) {
 	Polynom result;
 	_polynom.monoms->Reset();
 	while (!_polynom.monoms->IsEnded()) {
-		result = result + (*this * *_polynom.monoms->pCurr);
+		result += (*this * *_polynom.monoms->ReturnCurrent());//+=
 		_polynom.monoms->Next();
 	}
 	return result;
@@ -226,7 +226,7 @@ Polynom Polynom::operator-() const{
 	Polynom result(*this);
 	result.monoms->Reset();
 	while (!result.monoms->IsEnded()) {
-		result.monoms->pCurr->pData *= -1;
+		result.monoms->ReturnCurrent()->pData *= -1;
 		result.monoms->Next();
 	}
 	return result;
@@ -244,7 +244,7 @@ bool Polynom::operator==(const Polynom& _polynom) const{
 	monoms->Reset();
 	_polynom.monoms->Reset();
 	while (!monoms->IsEnded() && !_polynom.monoms->IsEnded()) {
-		if (*monoms->pCurr != *_polynom.monoms->pCurr) return false;
+		if (*monoms->ReturnCurrent() != *_polynom.monoms->ReturnCurrent()) return false;
 		monoms->Next();
 		_polynom.monoms->Next();
 	}
@@ -254,26 +254,26 @@ bool Polynom::operator==(const Polynom& _polynom) const{
 
 ostream& operator<<(ostream& out, const Polynom& _polynom) {
 	_polynom.monoms->Reset();
-	if (_polynom.monoms->pCurr->pData > 0)
-		out << _polynom.monoms->pCurr->pData;
-	if (_polynom.monoms->pCurr->key / 100 == 1) out << "*x";
-	if (_polynom.monoms->pCurr->key / 100 != 0 && _polynom.monoms->pCurr->key / 100 != 1) out << "*x^" << _polynom.monoms->pCurr->key / 100;
-	if (_polynom.monoms->pCurr->key % 100 / 10 == 1) out << "*y";
-	if (_polynom.monoms->pCurr->key % 100 / 10 != 0 && _polynom.monoms->pCurr->key % 100 / 10 != 1) out << "*y^" << _polynom.monoms->pCurr->key % 100 / 10;
-	if (_polynom.monoms->pCurr->key % 10 == 1) out << "*z";
-	if (_polynom.monoms->pCurr->key % 10 != 0 && _polynom.monoms->pCurr->key % 10 != 1) out << "*z^" << _polynom.monoms->pCurr->key % 10;
+	if (_polynom.monoms->ReturnCurrent()->pData > 0)
+		out << _polynom.monoms->ReturnCurrent()->pData;
+	if (_polynom.monoms->ReturnCurrent()->key / 100 == 1) out << "*x";
+	if (_polynom.monoms->ReturnCurrent()->key / 100 != 0 && _polynom.monoms->ReturnCurrent()->key / 100 != 1) out << "*x^" << _polynom.monoms->ReturnCurrent()->key / 100;
+	if (_polynom.monoms->ReturnCurrent()->key % 100 / 10 == 1) out << "*y";
+	if (_polynom.monoms->ReturnCurrent()->key % 100 / 10 != 0 && _polynom.monoms->ReturnCurrent()->key % 100 / 10 != 1) out << "*y^" << _polynom.monoms->ReturnCurrent()->key % 100 / 10;
+	if (_polynom.monoms->ReturnCurrent()->key % 10 == 1) out << "*z";
+	if (_polynom.monoms->ReturnCurrent()->key % 10 != 0 && _polynom.monoms->ReturnCurrent()->key % 10 != 1) out << "*z^" << _polynom.monoms->ReturnCurrent()->key % 10;
 	_polynom.monoms->Next();
 	while (!_polynom.monoms->IsEnded()) {
-		if(_polynom.monoms->pCurr->pData > 0)
-			out << "+" << _polynom.monoms->pCurr->pData;
+		if(_polynom.monoms->ReturnCurrent()->pData > 0)
+			out << "+" << _polynom.monoms->ReturnCurrent()->pData;
 		else 
-			out << _polynom.monoms->pCurr->pData;
-		if (_polynom.monoms->pCurr->key / 100 == 1) out << "*x";
-		if (_polynom.monoms->pCurr->key / 100 != 0 && _polynom.monoms->pCurr->key / 100 != 1) out << "*x^" << _polynom.monoms->pCurr->key / 100;
-		if (_polynom.monoms->pCurr->key % 100 / 10 == 1) out << "*y";
-		if (_polynom.monoms->pCurr->key % 100 / 10 != 0 && _polynom.monoms->pCurr->key % 100 / 10 != 1) out << "*y^" << _polynom.monoms->pCurr->key % 100 / 10;
-		if (_polynom.monoms->pCurr->key % 10 == 1) out << "*z";
-		if (_polynom.monoms->pCurr->key % 10 != 0 && _polynom.monoms->pCurr->key % 10 != 1) out << "*z^" << _polynom.monoms->pCurr->key % 10;
+			out << _polynom.monoms->ReturnCurrent()->pData;
+		if (_polynom.monoms->ReturnCurrent()->key / 100 == 1) out << "*x";
+		if (_polynom.monoms->ReturnCurrent()->key / 100 != 0 && _polynom.monoms->ReturnCurrent()->key / 100 != 1) out << "*x^" << _polynom.monoms->ReturnCurrent()->key / 100;
+		if (_polynom.monoms->ReturnCurrent()->key % 100 / 10 == 1) out << "*y";
+		if (_polynom.monoms->ReturnCurrent()->key % 100 / 10 != 0 && _polynom.monoms->ReturnCurrent()->key % 100 / 10 != 1) out << "*y^" << _polynom.monoms->ReturnCurrent()->key % 100 / 10;
+		if (_polynom.monoms->ReturnCurrent()->key % 10 == 1) out << "*z";
+		if (_polynom.monoms->ReturnCurrent()->key % 10 != 0 && _polynom.monoms->ReturnCurrent()->key % 10 != 1) out << "*z^" << _polynom.monoms->ReturnCurrent()->key % 10;
 		_polynom.monoms->Next();
 	}
 	return out;

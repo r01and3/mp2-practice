@@ -93,7 +93,8 @@ Polynom::Polynom(const string& str) {
 			i++;
 		}
 		Monom monom(_monom);
-		*this += monom;
+		if (monom.pData != 0)
+			*this += monom;
 		monoms->Reset();
 	}
 }
@@ -254,8 +255,7 @@ bool Polynom::operator==(const Polynom& _polynom) const{
 
 ostream& operator<<(ostream& out, const Polynom& _polynom) {
 	_polynom.monoms->Reset();
-	if (_polynom.monoms->ReturnCurrent()->pData > 0)
-		out << _polynom.monoms->ReturnCurrent()->pData;
+	out << _polynom.monoms->ReturnCurrent()->pData;
 	if (_polynom.monoms->ReturnCurrent()->key / 100 == 1) out << "*x";
 	if (_polynom.monoms->ReturnCurrent()->key / 100 != 0 && _polynom.monoms->ReturnCurrent()->key / 100 != 1) out << "*x^" << _polynom.monoms->ReturnCurrent()->key / 100;
 	if (_polynom.monoms->ReturnCurrent()->key % 100 / 10 == 1) out << "*y";
@@ -299,7 +299,8 @@ istream& operator>>(istream& in, Polynom& _polynom) {
 			i++;
 		}
 		Monom monom(_monom);
-		_polynom += monom;
+		if (monom.pData != 0)
+			_polynom += monom;
 		_polynom.monoms->Reset();
 	}
 	return in;

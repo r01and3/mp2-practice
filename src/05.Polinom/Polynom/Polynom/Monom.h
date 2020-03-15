@@ -41,7 +41,7 @@ TNode<double, unsigned int>::TNode(const TNode<double, unsigned int>& _monom) {
 }
 
 TNode<double, unsigned int>::TNode(unsigned int _key, double _pData, TNode<double, unsigned int>* _monom) {
-	if (_key < 0 || _key > 999 || _pData == 0.0) throw exception("Incorrect monom");
+	if (_key < 0 || _key > 999 /*|| _pData == 0.0*/) throw exception("Incorrect monom");
 	key = _key;
 	pData = _pData;
 	if (_monom == NULL)

@@ -1,5 +1,3 @@
-#include "Monom.h"
-#include "TList.h"
 #include "Polynom.h"
 
 void main() {
